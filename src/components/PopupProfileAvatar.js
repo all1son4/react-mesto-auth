@@ -3,12 +3,6 @@ import PopupWithForm from "./PopupWithForm";
 
 function PopupProfileAvatar({ isOpen, onClose, buttonText, onOverlayClick, onUpdateAvatar }) {
 
-  // const [avatar, setAvatar] = React.useState('')
-
-  // function handleChangeAvatar(event) {
-  //   setAvatar(event.target.value)
-  // }
-
   const avatar = React.useRef(null)
 
   function handleSubmit(event) {
