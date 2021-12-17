@@ -27,7 +27,6 @@ function PopupProfileAvatar({ isOpen, onClose, buttonText, onOverlayClick, onUpd
         placeholder="Ссылка на картинку"
         className="popup__field popup__field_type_profile-avatar popup__input"
         ref={avatar}
-        // onChange={handleChangeAvatar}
         minLength="2"
         required />
         <span id="user-avatar-error" className="error"></span>

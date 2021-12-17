@@ -1,22 +1,20 @@
 import React from 'react';
-import Header from './Header.js';
-import Main from './Main.js';
-import Footer from './Footer.js';
-import PopupEditProfile from './PopupEditProfile.js';
-import PopupAddCard from './PopupAddCard.js';
-import PopupProfileAvatar from './PopupProfileAvatar.js';
-import ImagePopup from './ImagePopup.js';
-import PopupForDelete from './PopupForDelete.js';
+import Header from './Header.jsx';
+import Main from './Main.jsx';
+import Footer from './Footer.jsx';
+import PopupEditProfile from './PopupEditProfile.jsx';
+import PopupAddCard from './PopupAddCard.jsx';
+import PopupProfileAvatar from './PopupProfileAvatar.jsx';
+import ImagePopup from './ImagePopup.jsx';
+import PopupForDelete from './PopupForDelete.jsx';
 import api from '../utils/Api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import { CardListContext } from '../contexts/CardListContext.js';
-import { Route, Switch } from 'react-router-dom';
-import Register from './Register.js';
-import Login from './Login.js';
-import InfoToolTip from './InfoToolTip.js';
-
-import successIcon from '../images/complite_icon.svg'
-import failIcon from '../images/fail_icon.svg'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import Register from './Register.jsx';
+import Login from './Login.jsx';
+import ProtectedRoute from './ProtectedRoute.jsx';
+import * as auth from '../utils/auth.js'
 
 
 function App() {
@@ -29,11 +27,18 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
   const [deleteCard, setDeleteCard] = React.useState(null);
+  const [userMail, setUserMail] = React.useState('')
 
-  const [isInfoToolTipOpen, setInfoToolTipOpen] = React.useState(true)
+  const [loggedIn, setLoggedIn] = React.useState(false);
+
+  const navigate = useNavigate();
 
 
-  React.useEffect(() => {
+  React.useEffect(()=> {
+    if (!loggedIn) return;
+
+    handleTokenCheck();
+
     api
       .getAppInfo()
       .then(([userInfoRes, cardListRes]) => {
@@ -42,7 +47,7 @@ function App() {
         setCards(cardListRes);
       })
       .catch(err => alert(`Ошибка полученя данных: ${err}`))
-  }, [])
+  }, [loggedIn])
 
   React.useEffect(() => {
     if (isEditProfilePopupOpen || isEditAvatarPopupOpen || isAddPlacePopupOpen || selectedCard.isOpen || isDeleteSubmitPopupOpen) {
@@ -58,7 +63,7 @@ function App() {
         document.removeEventListener('keydown', handleEsc);
       }
     }
-  }, [isEditProfilePopupOpen, isEditAvatarPopupOpen, isAddPlacePopupOpen, selectedCard.isOpen, isDeleteSubmitPopupOpen])
+  }, [isEditProfilePopupOpen, isEditAvatarPopupOpen, isAddPlacePopupOpen, selectedCard.isOpen, isDeleteSubmitPopupOpen]);
 
   function handleEditAvatarClick() {
     setPopupEditAvatar(true);
@@ -86,7 +91,7 @@ function App() {
     setPopupEditProfile(false);
     setPopupAddPlace(false);
     setSelectedCard({ isOpen: false });
-    setPopupDeleteSubmit(false)
+    setPopupDeleteSubmit(false);
   }
 
   function handleOverlayClick(event) {
@@ -157,67 +162,84 @@ function App() {
     .catch(err => alert(`Ошибка отправки данных: ${err}`));
   }
 
+  const handleLogin = () => {
+    setLoggedIn(true);
+  }
+
+  const handleTokenCheck = () => {
+    if (localStorage.getItem('token')) {
+      const token = localStorage.getItem('token');
+
+      auth
+          .checkToken(token)
+          .then((res => {
+            console.log(res)
+            if (res) {
+              setLoggedIn(true);
+              setUserMail(res.data.email);
+            }
+          }))
+    }
+  }
+
+  const handleLogout = (event) => {
+    event.preventDefault()
+
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+
+    navigate('/sign-in');
+  }
+
   return (
     <div className="page__container">
-      <Switch>
-        <Route exact path="/">
+      <Header loggedIn={loggedIn} onLogout={handleLogout} email={userMail}/>
+      <Routes>
+        <Route path="/sign-up" element={<Register onClose={closeAllPopups}
+                                                  onOverlayClick={handleOverlayClick}/>}>
+        </Route>
+        <Route path="/sign-in" element={loggedIn ? <Navigate to='/' /> : <Login  onLogin={handleLogin}/>}>
+        </Route>
+        <Route exact path="/" element={
           <CurrentUserContext.Provider value={currentUser}>
-            <Header />
-            <CardListContext.Provider value={cards}>
-              <Main onEditAvatar={handleEditAvatarClick}
-                    onEditProfile={handleEditProfileClick}
-                    onAddPlace={handleAddPlaceClick}
-                    onCardClick={handleCardClick}
-                    onDeleteClick={handleDeleteClick}
-                    onCardLike={handleCardLike}/>
-            </CardListContext.Provider>
-            <Footer />
-            <PopupProfileAvatar isOpen={isEditAvatarPopupOpen}
-                                onClose={closeAllPopups}
-                                onOverlayClick={handleOverlayClick}
-                                onUpdateAvatar={handleUpdateAvatar}
-                                buttonText="Сохранить"/>
-            <PopupAddCard isOpen={isAddPlacePopupOpen}
-                          onClose={closeAllPopups}
-                          onOverlayClick={handleOverlayClick}
-                          onAddPlace={handleAddPlaceSubmit}
-                          buttonText="Создать"/>
-            <PopupEditProfile isOpen={isEditProfilePopupOpen}
-                              onOverlayClick={handleOverlayClick}
+          <CardListContext.Provider value={cards}>
+          <ProtectedRoute loggedIn={loggedIn}
+                          component={Main}
+                          onEditAvatar={handleEditAvatarClick}
+                          onEditProfile={handleEditProfileClick}
+                          onAddPlace={handleAddPlaceClick}
+                          onCardClick={handleCardClick}
+                          onDeleteClick={handleDeleteClick}
+                          onCardLike={handleCardLike}/>
+          </CardListContext.Provider>
+          <Footer />
+          <PopupProfileAvatar isOpen={isEditAvatarPopupOpen}
                               onClose={closeAllPopups}
-                              onUpdateUser={handleUpdateUser}
+                              onOverlayClick={handleOverlayClick}
+                              onUpdateAvatar={handleUpdateAvatar}
                               buttonText="Сохранить"/>
-            <ImagePopup card={selectedCard}
+          <PopupAddCard isOpen={isAddPlacePopupOpen}
                         onClose={closeAllPopups}
-                        onOverlayClick={handleOverlayClick}/>
-            <PopupForDelete isOpen={isDeleteSubmitPopupOpen}
-                            onClose={closeAllPopups}
+                        onOverlayClick={handleOverlayClick}
+                        onAddPlace={handleAddPlaceSubmit}
+                        buttonText="Создать"/>
+          <PopupEditProfile isOpen={isEditProfilePopupOpen}
                             onOverlayClick={handleOverlayClick}
-                            buttonText="Да"
-                            onCardDelete={handleCardDelete}/>
-          </CurrentUserContext.Provider>
-        </Route>
-        <Route path="/sign-up">
-          <Header />
-          <Register />
-          <InfoToolTip isOpen={true}
+                            onClose={closeAllPopups}
+                            onUpdateUser={handleUpdateUser}
+                            buttonText="Сохранить"/>
+          <ImagePopup card={selectedCard}
+                      onClose={closeAllPopups}
+                      onOverlayClick={handleOverlayClick}/>
+          <PopupForDelete isOpen={isDeleteSubmitPopupOpen}
                           onClose={closeAllPopups}
                           onOverlayClick={handleOverlayClick}
-                          name="infoToolTip"
-                          info="Вы успешно зарегистрировались!"
-                          icon={successIcon}/>
-        </Route>
-        <Route path="/sign-in">
-          <Header />
-          <Login />
-          <InfoToolTip isOpen={true}
-                          onClose={closeAllPopups}
-                          onOverlayClick={handleOverlayClick}
-                          name="infoToolTip"
-                          info="Что-то пошло не так! Попробуйте ещё раз."
-                          icon={failIcon}/>
-        </Route>
-      </Switch>
+                          buttonText="Да"
+                          onCardDelete={handleCardDelete}/>
+        </CurrentUserContext.Provider>
+        } />
+        <Route path='*' element={<Navigate to='/' />}></Route>
+      </Routes>
     </div>
   );
 }

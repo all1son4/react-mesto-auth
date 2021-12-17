@@ -1,5 +1,5 @@
 import React from "react"
-import Card from "../components/Card";
+import Card from "./Card";
 import { CardListContext } from "../contexts/CardListContext";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
