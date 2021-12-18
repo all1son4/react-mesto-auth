@@ -43,7 +43,6 @@ function Register({onClose, onOverlayClick}) {
               status: 'complite'
             });
             setInfoToolTipIsOpen(true);
-            // navigate('/sign-in');
           }
           else {
             setConfig({
@@ -72,7 +71,7 @@ function Register({onClose, onOverlayClick}) {
         type="text"
         id="register-mail"
         name="email"
-        defaultValue={values.email || ``}
+        value={values.email || ``}
         onChange={handleChange}
         placeholder="Email"
         className="auth__field"
@@ -83,7 +82,7 @@ function Register({onClose, onOverlayClick}) {
         type="password"
         id="register-pass"
         name="password"
-        defaultValue={values.password || ``}
+        value={values.password || ``}
         onChange={handleChange}
         placeholder="Пароль"
         className="auth__field"
@@ -99,7 +98,8 @@ function Register({onClose, onOverlayClick}) {
                     name='infoToolTip'
                     handleClose={()=> {
                       if (config.status === 'complite')
-                      navigate('/sign-in')}}
+                      navigate('/sign-in')
+                      }}
                     config={config}
                     setIsOpen={setInfoToolTipIsOpen}
                     />

@@ -8,9 +8,7 @@ export const register = (values) => {
     },
     body: JSON.stringify(values)
   })
-  .then((response) => {
-    return response.json();
-  })
+  .then(res => getResponseData(res))
   .then((res) => {
     return res;
   })
@@ -24,7 +22,7 @@ export const authorize = (values) => {
     },
     body: JSON.stringify(values)
   })
-  .then((response => response.json()))
+  .then(res => getResponseData(res))
   .catch(err => console.log(err))
 };
 export const checkToken = (token) => {
@@ -35,6 +33,15 @@ export const checkToken = (token) => {
       'Authorization': `Bearer ${token}`,
     }
   })
-  .then(res => res.json())
+  .then(res => getResponseData(res))
   .then(data => data)
+}
+
+const getResponseData = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  else {
+    return Promise.reject(`Упс, получилась ошибка: ${res.status}`);
+  }
 }

@@ -18,7 +18,7 @@ function InfoToolTip(props) {
   React.useEffect(() => {
     if (props.isOpen) {
       const handleEsc = (event) => {
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' || 'Enter') {
           handleClose();
         }
       }

@@ -33,11 +33,12 @@ function App() {
 
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    handleTokenCheck();
+  }, [])
 
   React.useEffect(()=> {
     if (!loggedIn) return;
-
-    handleTokenCheck();
 
     api
       .getAppInfo()
@@ -179,6 +180,7 @@ function App() {
               setUserMail(res.data.email);
             }
           }))
+          .catch(err => alert(`Ошибка полученя данных: ${err}`))
     }
   }
 

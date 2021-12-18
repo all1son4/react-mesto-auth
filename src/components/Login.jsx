@@ -73,6 +73,7 @@ function Login({onLogin}) {
               })
 
               localStorage.setItem('token', res.token);
+              console.log(localStorage.getItem('token'))
               onLogin();
               navigate('/')
             }
@@ -94,7 +95,7 @@ function Login({onLogin}) {
         type="text"
         id="login-mail"
         name="email"
-        defaultValue={values.email || ``}
+        value={values.email || ``}
         onChange={handleChange}
         placeholder="Email"
         className="auth__field"
@@ -105,7 +106,7 @@ function Login({onLogin}) {
         type="password"
         id="login-pass"
         name="password"
-        defaultValue={values.password || ``}
+        value={values.password || ``}
         onChange={handleChange}
         placeholder="Пароль"
         className="auth__field"
