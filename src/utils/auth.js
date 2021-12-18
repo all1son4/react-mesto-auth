@@ -12,7 +12,6 @@ export const register = (values) => {
   .then((res) => {
     return res;
   })
-  .catch((err) => console.log(err));
 };
 export const authorize = (values) => {
   return fetch(`${BASE_URL}/signin`, {
@@ -23,7 +22,6 @@ export const authorize = (values) => {
     body: JSON.stringify(values)
   })
   .then(res => getResponseData(res))
-  .catch(err => console.log(err))
 };
 export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
