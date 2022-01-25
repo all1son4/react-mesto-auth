@@ -11,7 +11,7 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-[The project is available here](http://react-mest-auth.surge.sh)
+[The project is available here](http://react-mesto-auth.surge.sh)
 
 ## Project Description
 
