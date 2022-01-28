@@ -1,32 +1,38 @@
-# Project MESTO with Create React App
+## Project name
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+MESTO with Authentication
+
+[The project is available here](http://react-mesto-auth.surge.sh)
 
 ## Available Scripts
 
-In the project directory, you can run:
+Before open project directory, you must install React library, Node.js, Webpack, Babel.
 
+In the project directory, you can run:
 ### `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-[The project is available here](http://react-mesto-auth.surge.sh)
+## Stack
+
++ JavaScript
++ React and his libraries
++ Webpack
++ Semantics tegs HTML5
++ API
++ Babel
++ BEM (Nested)
++ Node.js
+
 
 ## Project Description
 
-Одностраничный пользовательский интерфейс, созданное для создания и персонализации идентифицирующего профиля. 
-
-Весь интерфейс создан с помощью JavaScript-библиотеки React. Привычные блоки и заменены понятием компаненты.
-Данный проект полностью реализован с помощью функциональных компанентов. Это делает код более удобным и не таким массивным.
-На данном этапе используются хук состояния и хук эффекта. Хуки состояния помогают отрендерить верстку приложения, 
-хуки эффектов помогают добиться взаимодействия с приложением в реальном времени. Реализована возможость при с помощью API-запросов
-добавлять и удалять карточки на странице, а также изменять информацию о профиле. Также с использованием ReactRouter v6 организована 
-маршрутизация между компонентами. Добавлена регистрация и авторизация определенного пользователя страницы через API-запросы.
+A single page application with the ability to register and authenticate the user. The user can log in and log out of the application. He can also change information about himself, add and remove cards, like and unlike cards.
 
 ## Future improvements
 
-+ Добавить адаптивную верстку при помощи @media-запросов.
-+ Добавить валидацию форм.
-+ Добавить индикацию обработки запросов внутри приложения.
-+ Добавить скролл карточек по колесу.
++ Adaptive layout via @media-request.
++ Validation.
++ Indication of request processing within the application.
++ Scroll cards.
