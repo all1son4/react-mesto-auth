@@ -1,6 +1,6 @@
 ## Project name
 
-MESTO with Authentication
+Mesto with Authentication
 
 [The project is available here](http://react-mesto-auth.surge.sh)
 
@@ -22,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 + Semantics tegs HTML5
 + API
 + Babel
-+ BEM (Nested)
++ BEM structure (Nested)
 + Node.js
 
 
